@@ -164,7 +164,11 @@ Gọi `GET http://localhost:3000/hello` với cùng header sẽ trả:
   "message": "Hello World"
 }
 ```
-(docs/images/postman-login-redacted.png)
+
+Ảnh kết quả gọi thành công API `/hello` trong Postman:
+
+![Postman gọi GET /hello thành công và nhận phản hồi Hello World](docs/images/image.png)
+
 Thiếu token, token không hợp lệ hoặc token hết hạn sẽ nhận `401 Unauthorized`.
 Middleware xác minh token bằng `supabase.auth.getUser(token)`; không chỉ giải
 mã JWT ở phía client để quyết định quyền truy cập.
