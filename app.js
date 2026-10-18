@@ -1,12 +1,16 @@
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
 const createAuthMiddleware = require("./auth-middleware");
 const supabase = require("./supabase");
+const { authSpec } = require("./swagger");
 
 function createApp(authClient = supabase) {
   const app = express();
   const authenticateToken = createAuthMiddleware(authClient);
 
   app.use(express.json());
+  app.get("/api-docs/openapi.json", (req, res) => res.json(authSpec));
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(authSpec));
 
   app.post("/login", async (req, res, next) => {
     const body = req.body || {};

@@ -106,3 +106,20 @@ test("login accepts email as the login field", async () => {
   });
   assert.equal(response.status, 200);
 });
+
+test("auth service serves Swagger UI and documents the JWT bearer scheme", async () => {
+  const docs = await fetch(`${baseUrl}/api-docs/`);
+  assert.equal(docs.status, 200);
+  assert.match(await docs.text(), /Swagger UI/);
+
+  const spec = await fetch(`${baseUrl}/api-docs/openapi.json`);
+  assert.equal(spec.status, 200);
+  const openapi = await spec.json();
+  assert.deepEqual(openapi.components.securitySchemes.bearerAuth, {
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "JWT",
+    description: "Paste the access token returned by POST /login (without the Bearer prefix)."
+  });
+  assert.equal(openapi.paths["/login"].post.security.length, 0);
+});
